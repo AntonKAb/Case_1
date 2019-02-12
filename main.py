@@ -14,7 +14,13 @@ class state:
     land = 130
 
 # TODO
-# Events functions.
+# Events functions. (Anton)
+
+# TODO
+# Events functions. (Kirill)
+
+# TODO
+# Events functions. (Sergey)
 
 # TODO
 # Game life cycle.
