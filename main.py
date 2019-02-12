@@ -15,7 +15,7 @@ class state:
 
 # TODO
 # Events functions.
-def ceed():
+def seed_own():
     print('Король, сколько зерна песеять?')
     am_to_seat = int(input())
     state.seed -= am_to_seat
@@ -45,16 +45,42 @@ def ceed():
     ev_all.append(af_event_3)
     ev_r = random.choice(ev_all)
     if ev_r == af_event_1:
+        print(af_event_1)
         state.seed += am_to_seat * 0.75
     elif ev_r == af_event_2:
+        print(af_event_2)
         state.seed += am_to_seat * 2
     elif ev_r == af_event_3:
+        print(af_event_3)
         state.seed += am_to_seat * 1.5
     elif ev_r == af_event_4 and state.people > 300 and state.seed < 5000:
+        print(af_event_4)
         state.people = state.people * 0.85
         print('Такими темпами в стране начнется голод!')
     elif ev_r == af_event_4 and (state.seed >= 5000 or state.people < 300):
+        print(af_event_4)
         pass
+    print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(state.money,
+                                                                                           state.seed, state.people,
+                                                                                           state.distemper, state.year,
+                                                                                           state.land))
+
+    def seed_sell():
+    print('Король, соседнее государство хочет купить зерно(2 буша за зернышко). Сколько продать?')
+    am_sell = int(input())
+    state.seed -= am_sell
+    state.money += am_sell * 2
+    print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(state.money,
+                                                                                           state.seed, state.people,
+                                                                                           state.distemper, state.year,
+                                                                                           state.land))
+
+
+def seed_buy():
+    print('Король, соседнее государство готово продать зерно(2 буша за зернышко). Сколько купить?')
+    am_buy = int(input())
+    state.seed += am_buy
+    state.money -= am_buy * 2
     print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(state.money,
                                                                                            state.seed, state.people,
                                                                                            state.distemper, state.year,
