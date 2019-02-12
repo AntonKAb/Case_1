@@ -13,7 +13,6 @@ class state:
     year = 0
     land = 130
 
-
 # TODO
 # Events functions.
 
