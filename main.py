@@ -15,7 +15,8 @@ class state:
 
 # TODO
 # Events functions.
- print('Король, сколько зерна песеять?')
+def ceed():
+    print('Король, сколько зерна песеять?')
     am_to_seat = int(input())
     state.seed -= am_to_seat
     print('Король, сколько зерна раздать людям?')
