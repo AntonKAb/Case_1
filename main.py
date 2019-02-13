@@ -63,9 +63,9 @@ def seed_own():
     print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(state.money,
                                                                                            state.seed, state.people,
                                                                                            state.distemper, state.year,
+ 
                                                                                            state.land))
-
-    def seed_sell():
+def seed_sell():
     print('Король, соседнее государство хочет купить зерно(2 буша за зернышко). Сколько продать?')
     am_sell = int(input())
     state.seed -= am_sell
@@ -75,12 +75,43 @@ def seed_own():
                                                                                            state.distemper, state.year,
                                                                                            state.land))
 
-
 def seed_buy():
     print('Король, соседнее государство готово продать зерно(2 буша за зернышко). Сколько купить?')
     am_buy = int(input())
     state.seed += am_buy
     state.money -= am_buy * 2
+    print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(state.money,
+                                                                                           state.seed, state.people,
+                                                                                           state.distemper, state.year,
+                                                                                           state.land))
+
+def war():
+    event = 'Король Испании развязал войну на Севере.Он просит Вас принять участие в ней на его стороне. '\
+           'Желаете принять участие? (100 солдат, 10 000 золотых).В случае победы Испания обещает вам 25 000 золотых.'
+    print(event)
+    answ = input()
+    if answ.upper() == 'ДА' and state.money >= 10000 and state.people >= 100:
+        state.money -= 10000
+        state.people -= 100
+        print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(state.money,
+                                                                                               state.seed, state.people,
+                                                                                               state.distemper,
+                                                                                               state.year,
+                                                                                               state.land))
+        event_af1 = 'Испанский Король проиграл войну.'
+        event_af2 = 'Испания побеждает в войне!!!'
+        con_war = random.choice([event_af1, event_af2])
+        print(con_war)
+        if con_war == event_af1:
+            print('Нашему государству ничего не достанется, Кололь.')
+        if con_war == event_af2:
+            print('В казну поступили обещанные 25 000 золотых. Из 100 солдат выжило только 25.')
+            state.money += 25000
+            state.people += 25
+    elif answ.upper() == 'NO':
+        pass
+    elif answ.upper() == 'ДА' and (state.money < 10000 or state.people < 100):
+        print('Король, у Вас недостаточно ресурсов.')
     print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(state.money,
                                                                                            state.seed, state.people,
                                                                                            state.distemper, state.year,
