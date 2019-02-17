@@ -113,7 +113,38 @@ def war_exodus():
             State.army += 25
 
 
-
+def separatism():
+    print('Король, Северное графство выступило против Вас и хочет отделиться? Отправить войска?')
+    answr = input()
+    evi_1 = 'Восстание подавлено!'
+    evi_2 = 'Нам не удалось подавить сепаратистов...'
+    if answr.upper() == 'ДА':
+        print('Сколько людей отправить?')
+        army = int(input())
+        if State.army >= army:
+            State.army -= army
+        if State.army < army:
+            while army > State.army:
+                print('Не хватает солдат.')
+                army = int(input())
+            State.army -= army
+        if army < 20:
+            print(evi_2, 'Ни один солдат не вернулся.')
+            State.land -= 30
+            State.people -= 15
+            State.army -= army
+            State.distemper += 3
+            print('Land - 30')
+            print('People - 15')
+            print('Army - ', army)
+            print('Distemper + 3')
+        if army >= 20:
+            print(evi_1)
+    if answr.upper() == 'НЕТ':
+        State.land -= 30
+        State.people -= 15
+        print('Land - 30')
+        print('People - 15')
 
 
 def discovery():
