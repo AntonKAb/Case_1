@@ -1,7 +1,7 @@
 """
 CASE_1
 Developers: Anufrienko K., Kabaev A., Lankevich S.
-"""
+
 
 # TODO
 # Government object.
@@ -48,15 +48,11 @@ def seed_own():
         State.seed += am_to_seat * 1.5
     elif ev_r == af_event_4 and State.people > 300 and State.seed < 5000:
         State.people = State.people * 0.85
-        State.distemper += 2
+        State.distemper += 5
         print('Такими темпами в стране начнется голод!')
-        print('Distemper + 2')
+        print('Distemper + 5')
     elif ev_r == af_event_4 and (State.seed >= 5000 or State.people < 300):
         pass
-    print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(State.money,
-                                                                                           State.seed, State.people,
-                                                                                           State.distemper, State.year,
-                                                                                           State.land))
 
 
 def seed_sell():
@@ -72,11 +68,6 @@ def seed_sell():
         State.seed -= am_sell
         State.money += am_sell * 2
 
-    print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(State.money,
-                                                                                           State.seed, State.people,
-                                                                                           State.distemper, State.year,
-                                                                                           State.land))
-
 
 def seed_buy():
     print('Король, соседнее государство готово продать зерно(2 золотых за зернышко). Сколько купить?')
@@ -90,47 +81,36 @@ def seed_buy():
     if State.money >= am_buy * 2:
         State.seed += am_buy
         State.money -= am_buy * 2
-    print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(State.money,
-                                                                                           State.seed, State.people,
-                                                                                           State.distemper, State.year,
-                                                                                           State.land))
 
 
 def war():
     event = 'Король Испании развязал войну на Севере.Он просит Вас принять участие в ней на его стороне. '\
-           'Желаете принять участие? (100 солдат, 5 000 золотых).В случае победы Испания обещает вам 12 000 золотых.'
+           'Желаете принять участие? (30 солдат, 5 000 золотых).В случае победы Испания обещает вам 12 000 золотых.'
     print(event)
     answ_w = input()
-    if answ_w.upper() == 'ДА' and State.money >= 10000 and State.people >= 100:
+    if answ_w.upper() == 'ДА' and State.money >= 5000 and State.army >= 30:
         State.money -= 5000
-        State.people -= 100
+        State.army -= 30
     elif answ_w.upper() == 'НЕТ':
         pass
-    elif answ_w.upper() == 'ДА' and (State.money < 10000 or State.people < 100):
+    elif answ_w.upper() == 'ДА' and (State.money < 5000 or State.army < 30):
         print('Король, у Вас недостаточно ресурсов.')
-        return answ_w
-    print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(State.money,
-                                                                                           State.seed, State.people,
-                                                                                           State.distemper,
-                                                                                           State.year,
-                                                                                           State.land))
+    later_event(1, war_exodus)
 
 
-def war_exodus(answ_w):
+def war_exodus():
         event_af1 = 'Испанский Король проиграл войну.'
         event_af2 = 'Испания побеждает в войне!!!'
         con_war = random.choice([event_af1, event_af2])
         print(con_war)
         if con_war == event_af1:
             print('Нашему государству ничего не достанется, Кололь.')
+            print('Distemper + 3')
+            State.distemper += 3
         if con_war == event_af2:
             print('В казну поступили обещанные 12 000 золотых. Из 100 солдат выжило только 25.')
             State.money += 12000
-            State.people += 25
-        print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(State.money,
-                                                                                           State.seed, State.people,
-                                                                                           State.distemper, State.year,
-                                                                                           State.land))
+            State.army += 25
 
 
 def separatism():
@@ -163,10 +143,6 @@ def separatism():
         State.people -= 20
         print('Land - 30')
         print('People - 20')
-    print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(State.money,
-                                                                                           State.seed, State.people,
-                                                                                           State.distemper, State.year,
-                                                                                           State.land))
 
 
 def discovery():
@@ -188,17 +164,13 @@ def discovery():
         State.seed += 420
         State.land += 40
         State.people += 10
-        if State.distemper >= 3:
-            State.distemper -= 3
-            print("Distemper - 3")
+        if State.distemper >= 10:
+            State.distemper -= 10
+            print("Distemper - 10")
         print('Seed + 420')
         print('Land + 40')
     if d_exodus == ev_2_:
         print('Король, экспедиционый корпус не вернулся')
-    print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(State.money,
-                                                                                           State.seed, State.people,
-                                                                                           State.distemper, State.year,
-                                                                                           State.land))
 
 
 def spy():
@@ -221,14 +193,10 @@ def spy():
         d_no = random.choice([bad_l, lose_1])
         if d_no == lose_1:
             print(lose_1)
-            State.distemper += 3
+            State.distemper += 13
             State.money -= 520
-            print('Distemper + 3')
+            print('Distemper + 13')
             print('Money - 520')
-    print('Money: {} | Seed: {} | People: {} | Distemper: {} | Year: {} | Land: {}'.format(State.money,
-                                                                                           State.seed, State.people,
-                                                                                           State.distemper, State.year,
-                                                                                           State.land))
 
 
 def husbrandy():
@@ -236,16 +204,62 @@ def husbrandy():
     dision = int(input())
     if dision <= State.land:
         State.land -= dision
-        State.food += dision * 50
+        State.food += dision * 10
         print('Land -', dision)
-        print('Food + ', dision * 50)
+        print('Food + ', dision * 10)
     if dision > State.land:
         while dision > State.land:
             dision = int(input())
         State.land -= dision
-        State.food += dision * 50
+        State.food += dision * 10
         print('Land -', dision)
-        print('Food + ', dision * 50)
+        print('Food + ', dision * 10)
 
+
+def wizard():
+    print("Король, у входа в дворец стоит странник. Он называет себя чародеем и просит встречи с Вашим высочеством. "
+          "Нам впустить его?")
+    chose = input()
+    if chose.upper() == 'ДА':
+        print('Чародей: Здравствуйте Король, давайте сыграем  в одну игру?')
+        print('*Ваш ответ Король*:')
+        play = input()
+        if play.upper() == 'ДА':
+            print('Чародей: Я загадываю одно слово из: Дракон, Рыцарь, Меч, Огонь. А вы должни отгадать. \n '
+                  'Если победите подряд два раза, одним щелчком пальцев  решу ваши проблемы в стране, но за каждый '
+                  'проигрыш отдаете мне 50 золотых. Вы готовы? \n (Введите да или нет)')
+            ready = input()
+            perm = True
+            var = 0
+            if ready.upper() == 'ДА':
+                guess = random.choice(['Дракон', 'Рыцарь', 'Меч', 'Огонь'])
+                while perm:
+                    print('Я загадал. Ваш ответ.')
+                    predict = input()
+                    if predict.upper() == guess.upper():
+                        var += 1
+                        if var < 2:
+                            print('Правильно. Идем дальше?')
+                            dici = input()
+                            if dici.upper() == 'НЕТ':
+                                perm = False
+                            if dici.upper() == 'ДА':
+                                perm = True
+                        if var == 2:
+                            perm = False
+                    if predict.upper() != guess.upper():
+                        print('Увы, вы ошиблись. Идем дальше?')
+                        var = var * 0
+                        dici = input()
+                        if dici.upper() == 'НЕТ':
+                            perm = False
+                            print('До встречи, Король.')
+                        if dici.upper() == 'ДА':
+                            perm = True
+                if var == 2:
+                    print('Кажется вы победили, Король. Вот Ваш приз.')
+                    res_changes('money', '+3000', 'food', '+300', 'seed', '+2000', 'distemper', f'-{State.distemper}')
+            if ready.upper() == 'НЕТ':
+                print('До встречи, Король.')
 # TODO
 # Game life cycle.
