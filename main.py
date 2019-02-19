@@ -44,7 +44,7 @@ def records():
     best = {}
     best['a'] = State.year
     x += '1'
-    records_ = dict(sorted(best.iteritems(), key=operator.itemgetter(1), reverse=True)[:5])
+    records_ = sorted(A, key=A.get, reverse=True)[:5]
     print('Рекорды:', records_)
     
     
