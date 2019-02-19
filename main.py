@@ -52,27 +52,27 @@ def acknowledgement():
 
 def moulin_rouge():
     print('Увеселительное кабарэ для молодых и взрослых бизнес-информатиков и бизнес-информатичек, где можно отдохнуть и телом и душой!')
-    res_changes('people', f'+{percent_changes(State.people, 3)}'
-                'distemper', f'-{percent_changes(State.distemper, 30)}'
+    res_changes('people', f'+{int(percent_changes(State.people, 3))}'
+                'distemper', f'-{int(percent_changes(State.distemper, 30))}'
                 'money', f'-{State.money, 500}')
 def church():
     print('Церковь построена, милорд!')
-    res_changes('distemper', f'-{percent_changes(State.distemper, 50)}'
-                'money', f'-{State.money, -2000}')
+    res_changes('distemper', f'-{int(percent_changes(State.distemper, 50))}'
+                'money', f'-{int(State.money, -2000)}')
 
 def accounting_chamber():
     print('Теперь у вас есть счетная палата.')
-    res_changes('money', f'+{percent_changes(State.money, 35)}')
+    res_changes('money', f'+{int(percent_changes(State.money, 35))}')
 
 def windmill():
     print('Мельница готова, король!')
-    res_changes('seed', f'+{percent_changes(State.seed, 20)}')
-    res_changes('money', f'-{percent_changes(State.money, 50)}')
+    res_changes('seed', f'+{int(percent_changes(State.seed, 20))}')
+    res_changes('money', f'-{int(percent_changes(State.money, 50))}')
 
 def barracks():
     print('Казармы готовы, Ваше Величество')
-    res_changes('money', f'-{State.money, 600}')
-    res_changes('army', f'+{percent_changes(State.army, 35)}')
+    res_changes('money', f'-{int(State.money, 600)}')
+    res_changes('army', f'+{int(percent_changes(State.army, 35))}')
 
 
 # TODO
