@@ -1,6 +1,7 @@
 """
 CASE_1
 Developers: Anufrienko K., Kabaev A., Lankevich S.
+"""
 
 
 from random import randint, choice
@@ -22,8 +23,10 @@ class State:
     army = 100
     year = 0
     land = 130
+    technologies = {'cattle_breeding': 0, 'agriculture': 0, 'hunting': 0, 'warfare': 0, 'mansory': 0, 'religion': 0,
+                    'rivalry': 0}
     buildings = {'windmill': 0, 'accounting_chamber': 0, 'moulin_rouge': 0}
-    tech_effects = {'food': 1, 'money': 1, 'people': 1, 'distemper': 1, 'army': 1, 'land': 1}
+    tech_effects = {'food': 1.0, 'money': 1.0, 'people': 1.0, 'distemper': 1.0, 'army': 1.0, 'land': 1.0}
 
 def acknowledgement():
     available_technologies = []
@@ -59,16 +62,15 @@ def acknowledgement():
 # Building functions.
 
 
-
 def moulin_rouge():
     print('Увеселительное кабарэ для молодых и взрослых бизнес-информатиков и бизнес-информатичек, где можно отдохнуть и телом и душой!')
-    res_changes('people', f'+{int(percent_changes(State.people, 3))}'
+    res_changes('people', f'+{int((percent_changes(State.people, 3)))}'
                 'distemper', f'-{int(percent_changes(State.distemper, 30))}'
-                'money', f'-{State.money, 500}')
+                'money', f'-500')
 def church():
     print('Церковь построена, милорд!')
-    res_changes('distemper', f'-{int(percent_changes(State.distemper, 50))}'
-                'money', f'-{int(State.money, -2000)}')
+    res_changes('distemper', f'-{(percent_changes(State.distemper, 50))}'
+                'money', f'-2000')
 
 def accounting_chamber():
     print('Теперь у вас есть счетная палата.')
@@ -76,12 +78,12 @@ def accounting_chamber():
 
 def windmill():
     print('Мельница готова, король!')
-    res_changes('seed', f'+{int(percent_changes(State.seed, 20))}')
+    res_changes('food', f'+{int(percent_changes(State.food, 20))}')
     res_changes('money', f'-{int(percent_changes(State.money, 50))}')
 
 def barracks():
     print('Казармы готовы, Ваше Величество')
-    res_changes('money', f'-{int(State.money, 600)}')
+    res_changes('money', f'-600')
     res_changes('army', f'+{int(percent_changes(State.army, 35))}')
 
 
@@ -121,15 +123,16 @@ def masonry():
 def rivalry():
     print('Честь, отвага и благородие отныне не чужды бизнес информатикам. Ожидайте турниры в вашу честь!')
     State.tech_effects.update({'army': 1.5})
-    Start.money -= 400
+    State.money -= 400
 
 
 #TODO
 #Cycle functions.
+
 def random_events():
-    negative_events = [village_fire(), city_fire(), flood(), conspiracy(), strike(), plague(), separatism(), war(), spy(),
-                       cruel_winter(), pirates(), tornado()]
-    positive_events = [discovery(), road(), hero(), wonders_of_nature(), forest_territory(), city_state()]
+    negative_events = [village_fire, city_fire, flood, conspiracy, strike, plague, separatism, war, spy,
+                       cruel_winter, pirates, tornado]
+    positive_events = [discovery, road, hero, wonder_of_nature, forest_territory, city_state]
     if State.technologies.get('masonry') == 1:
         positive_events.append(brilliants)
     if State.technologies.get('rivalry') == 1:
@@ -143,7 +146,7 @@ def random_events():
 def output():
     print('Деньги: {} | Зерно: {} | Народ: {} | Смута: {} '
           '| Год: {} | Замля: {} | Еда: {} | Армия: {}'.format(State.money, 
-                                                               State.seed, State.people, State.distemper, 
+                                                               State.food, State.people, State.distemper,
                                                                State.year, State.land, State.food, State.army))
     
 
@@ -151,10 +154,10 @@ def output():
 def seed_own():
     print('Король, сколько зерна песеять?')
     am_to_seat = int(input())
-    State.seed -= am_to_seat
+    State.food -= am_to_seat
     print('Король, сколько зерна раздать людям?')
     am_to_give = int(input())
-    State.seed -= am_to_give
+    State.food -= am_to_give
     if 1000 <= am_to_give < 2500 and State.people < 300:
         State.people = State.people * 1.05
     if 2500 <= am_to_give < 5000 and State.people < 300:
@@ -172,33 +175,33 @@ def seed_own():
     af_event_3 = 'Хороший урожай, милорд.'
     af_event_4 = 'Ужасный урожай, милорд. Мы не вырастили ничего!'
     ev_all = [af_event_4, af_event_1, af_event_2, af_event_3]
-    ev_r = random.choice(ev_all)
+    ev_r = choice(ev_all)
     if ev_r == af_event_1:
-        State.seed += am_to_seat * 0.75
+        State.food += am_to_seat * 0.75
     elif ev_r == af_event_2:
-        State.seed += am_to_seat * 2
+        State.food += am_to_seat * 2
     elif ev_r == af_event_3:
-        State.seed += am_to_seat * 1.5
-    elif ev_r == af_event_4 and State.people > 300 and State.seed < 5000:
+        State.food += am_to_seat * 1.5
+    elif ev_r == af_event_4 and State.people > 300 and State.food < 5000:
         State.people = State.people * 0.85
         State.distemper += 5
         print('Такими темпами в стране начнется голод!')
         print('Смута + 5')
-    elif ev_r == af_event_4 and (State.seed >= 5000 or State.people < 300):
+    elif ev_r == af_event_4 and (State.food >= 5000 or State.people < 300):
         pass
 
 
 def seed_sell():
     print('Король, соседнее государство хочет купить зерно(2 золотых за зернышко). Сколько продать?')
     am_sell = int(input())
-    if State.seed < am_sell:
-        while am_sell > State.seed:
+    if State.food < am_sell:
+        while am_sell > State.food:
             print('Не хватает зерна.')
             am_sell = int(input())
-        State.seed -= am_sell
+        State.food -= am_sell
         State.money += am_sell * 2
     if State.food >= am_sell:
-        State.seed -= am_sell
+        State.food -= am_sell
         State.money += am_sell * 2
 
 
@@ -209,10 +212,10 @@ def seed_buy():
         while am_buy * 2 > State.money:
             print('Не хватает денег.')
             am_buy = int(input())
-        State.seed += am_buy
+        State.food += am_buy
         State.money -= am_buy * 2
     if State.money >= am_buy * 2:
-        State.seed += am_buy
+        State.food += am_buy
         State.money -= am_buy * 2
 
 
@@ -234,7 +237,7 @@ def war():
 def war_exodus():
         event_af1 = 'Испанский Король проиграл войну.'
         event_af2 = 'Испания побеждает в войне!!!'
-        con_war = random.choice([event_af1, event_af2])
+        con_war = choice([event_af1, event_af2])
         print(con_war)
         if con_war == event_af1:
             print('Нашему государству ничего не достанется, Кололь.')
@@ -293,10 +296,10 @@ def discovery():
         pass
     ev_1_ = 'Король, экспедиционный корпус вернулся с открытиями и ресурсами!'
     ev_2_ = 'Король, нмикто не вернулся из экспедиции.'
-    d_exodus = random.choice([ev_1_, ev_2_])
+    d_exodus = choice([ev_1_, ev_2_])
     if d_exodus == ev_1_:
         print(ev_1_)
-        State.seed += 420
+        State.food += 420
         State.land += 40
         State.people += 10
         if State.distemper >= 10:
@@ -314,7 +317,7 @@ def spy():
     if ans.upper() == 'ДА':
         catch = "Шпион пойман! Мы смогли предовратить диверсию!"
         lose = 'Слухи остаются слухами.'
-        d_yes = random.choice([catch, lose])
+        d_yes = choice([catch, lose])
         if d_yes == catch:
             print(catch)
             State.distemper -= 3
@@ -325,7 +328,7 @@ def spy():
     if ans.upper() == 'НЕТ':
         lose_1 = 'Слухи оказались правдой. Шпион ограбил казну и убил несколько придворных.'
         bad_l = 'Слухи остаются слухами.'
-        d_no = random.choice([bad_l, lose_1])
+        d_no = choice([bad_l, lose_1])
         if d_no == lose_1:
             print(lose_1)
             State.distemper += 13
@@ -367,7 +370,7 @@ def wizard():
             perm = True
             var = 0
             if ready.upper() == 'ДА':
-                guess = random.choice(['Дракон', 'Рыцарь', 'Меч', 'Огонь'])
+                guess = choice(['Дракон', 'Рыцарь', 'Меч', 'Огонь'])
                 while perm:
                     print('Я загадал. Ваш ответ.')
                     predict = input()
@@ -520,17 +523,17 @@ def percent_changes(resource, percent):
 
 def village_fire():
     print('Король, в одной из наших деревень произошёл пожар! Погибли жители, сгорела земля и часть зерна!')
-    res_changes('people', f'-{int(str(percent_changes(State.people, 3)))}',
-                'food', f'-{int(str(percent_changes(State.food, 5)))}',
-                'land', f'-{int(str(percent_changes(State.land, 3)))}',
-                'distemper', f'+{int(str(randint(2, 10)))}')
+    res_changes('people', f'-{int(percent_changes(State.people, 5))}',
+                'food', f'-{int(percent_changes(State.food, 5))}',
+                'land', f'-{int(percent_changes(State.land, 3))}',
+                'distemper', f'+{int(randint(2, 10))}')
 
 
 def city_fire():
     print('Король, в одном из наших городов произошёл пожар! Погибли жители, сгорела часть денег!')
-    res_changes('people', f'-{int(str(percent_changes(State.people, 5)))}',
-                'money', f'-{int(str(percent_changes(State.money, 5)))}',
-                'distemper', f'+{int(str(randint(2, 10)))}')
+    res_changes('people', f'-{int(percent_changes(State.people, 5))}',
+                'money', f'-{int(percent_changes(State.money, 5))}',
+                'distemper', f'+{int(randint(2, 10))}')
 
 
 def flood():
@@ -759,10 +762,10 @@ while life is True:
     seed_buy()
     random_events()
     if turn_counter % 2 == 1:
-        if money >= 100:
-        building()
-        acknowledgement()
-        random_events()
+        if State.money >= 100:
+            building()
+            acknowledgement()
+    random_events()
     if State.technologies.get('sailing') == 1:
         fishing()
         fish_sell()
@@ -770,9 +773,9 @@ while life is True:
         husbrandy()
     if State.technologies.get('hunting') == 1:
         hunt()
-    if food / people <= 25 or people / land <= 2 or if distemper >= 75:
-        life = false
+    if State.food / State.people <= 25 or State.people / State.land <= 2 or State.distemper >= 75:
+        life = False
     else:
         pass
-print(Ваше правление не назовешь успешным, народ бизнес-информатиков не хочет более видеть столь беспомощного правителя...)
+print('Ваше правление не назовешь успешным, народ бизнес-информатиков не хочет более видеть столь беспомощного правителя...')
 exit()
