@@ -64,7 +64,7 @@ def windmill():
     print('Мельница готова, король!')
     res_changes('seed', f'+{percent_changes(State.seed, 20)}')
     res_changes('money', f'-{percent_changes(State.money, 50)}')
-    
+
 def barracks():
     print('Казармы готовы, Ваше Величество')
     res_changes('money', f'-{State.money, 600}')
@@ -115,7 +115,7 @@ def rivalry():
 def random_events():
     negative_events = [village_fire(), city_fire(), flood(), conspiracy(), strike(), plague(), separatism(), war(), spy(),
                        cruel_winter(), pirates(), tornado()]
-    positive_events = [discovery(), road(), forest_territory()]
+    positive_events = [discovery(), road(), hero(), wonders_of_nature(), forest_territory()]
     if State.technologies.get('masonry') == 1:
         positive_events.append(brilliants)
     if State.technologies.get('rivalry') == 1:
@@ -127,33 +127,27 @@ def random_events():
 # TODO
 # Game life cycle.
 turn_counter = 1
-
-#Seed distribution.
-seed_own()
-seed_sell()
-seed_buy()
-
-#Random developments.
-random_events()
-
-#Building and cognition phase.
-if turn_counter % 2 == 1:
-    if money >= 100:
-    building()
-    acknowledgement()
-
-#Random developments.
-random_events()
-
-#Fishing activity.
-if State.technologies.get('sailing') == 1:
-    fishing()
-    fish_sell()
-
-if State.technologies.get('cattle_breeding'):
-    husbrandy()
-
-#Hunting process.
-if State.technologies.get('hunting') == 1:
-    hunt()
-
+life = True
+while life is True:
+    seed_own()
+    seed_sell()
+    seed_buy()
+    random_events()
+    if turn_counter % 2 == 1:
+        if money >= 100:
+        building()
+        acknowledgement()
+        random_events()
+    if State.technologies.get('sailing') == 1:
+        fishing()
+        fish_sell()
+    if State.technologies.get('cattle_breeding'):
+        husbrandy()
+    if State.technologies.get('hunting') == 1:
+        hunt()
+    if food / people <= 25 or people / land <= 2 or if distemper >= 75:
+        life = false
+    else:
+        pass
+print(Ваше правление не назовешь успешным, народ бизнес-информатиков не хочет более видеть столь беспомощного правителя...)
+exit()
