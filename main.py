@@ -60,9 +60,10 @@ def building():
     answer = input('Введите название постройки: ')
     while answer not in available_buildings:
         answer = input('Введите корректное название постройки: ')
-    res_changes(answer, '+1')
+    later_event(1, res_changes(answer, '+1'))
 
 
+# Resource changing function.
 def res_changes(*args):
     for i in range(0, len(args), 2):
         res = args[i]
@@ -107,17 +108,19 @@ def res_changes(*args):
         elif res in State.buildings:
             if value == '+':
                 State.buildings[res] += int(change)
-            print(f'Вы построили {res}')
+            print(f'Вы построили: {res}')
 
 
 # Postponing event function.
-def later_event(turn_to_it, func):
-    try:
-        event_list = Game.turns[Game.turn + turn_to_it]
-        Game.turns.update({Game.turn + turn_to_it: event_list.append(func)})
-    except KeyError:
-        event_list = []
-        Game.turns.update({Game.turn + turn_to_it: event_list.append(func)})
+def later_event(*args):
+    for i in range(0, len(args), 2):
+        try:
+            event_list = Game.turns[Game.turn + args[i]]
+            event_list.append(args[i+1])
+            Game.turns.update({Game.turn + args[i]: event_list})
+        except KeyError:
+            event_list = [args[i+1]]
+            Game.turns.update({Game.turn + args[i]: event_list})
 
 
 # Getting answer function.
@@ -134,28 +137,27 @@ def percent_changes(resource, percent):
     return randint(resource * 1, resource * percent) / 100
 
 
-# Small resource change
-
-
 def village_fire():
     print('Король, в одной из наших деревень произошёл пожар! Погибли жители, сгорела земля и часть зерна!')
-    res_changes('people', f'-{str(percent_changes(State.people, 3))}',
-                'food', f'-{str(percent_changes(State.food, 5))}',
-                'land', f'-{str(percent_changes(State.land, 3))}',
-                'distemper', f'+{str(randint(2, 10))}')
+    res_changes('people', f'-{int(str(percent_changes(State.people, 3)))}',
+                'food', f'-{int(str(percent_changes(State.food, 5)))}',
+                'land', f'-{int(str(percent_changes(State.land, 3)))}',
+                'distemper', f'+{int(str(randint(2, 10)))}')
 
 
 def city_fire():
     print('Король, в одном из наших городов произошёл пожар! Погибли жители, сгорела часть денег!')
-    res_changes('people', f'-{str(percent_changes(State.people, 5))}',
-                'money', f'-{str(percent_changes(State.money, 5))}',
-                'distemper', f'+{str(randint(2, 10))}')
+    res_changes('people', f'-{int(str(percent_changes(State.people, 5)))}',
+                'money', f'-{int(str(percent_changes(State.money, 5)))}',
+                'distemper', f'+{int(str(randint(2, 10)))}')
 
 
 def flood():
     print('Король, произошло наводнение! Вода смыла наши посевы и унесла жизни нескольких сельчан!')
-    res_changes('people', f'-{percent_changes(State.people, 5)}', 'food', f'-{percent_changes(State.food, 10)}',
-                'land', f'+{percent_changes(State.land, 4)}', 'distemper', f'+{randint(2, 10)}')
+    res_changes('people', f'-{int(percent_changes(State.people, 5))}',
+                'food', f'-{int(percent_changes(State.food, 10))}',
+                'land', f'+{int(percent_changes(State.land, 4))}',
+                'distemper', f'+{int(randint(2, 10))}')
 
 
 def conspiracy():
@@ -163,7 +165,7 @@ def conspiracy():
     answers = 'Мы можем нанять шпиона(1), который отловит всех заговорщиков, или ждать, пока они сделают первый шаг(2)'
     answer = give_answer(text, answers)
     if answer == '1':
-        res_changes('money', f'-{State.money * 0.2}')
+        res_changes('money', f'-{int(State.money * 0.2)}')
     else:
         if not randint(0, 4):
             Game.life = False
@@ -221,7 +223,7 @@ def columbus():
 
 def brilliants():
     print('Ваши подданые нашли пещеру с бриллиантами!')
-    res_changes('money', f'+{str(percent_changes(State.money, 20))}')
+    res_changes('money', f'+{int(str(percent_changes(State.money, 20)))}')
 
 
 def forest():
@@ -286,7 +288,7 @@ def elephants():
 
 def hunt():
     print('Охота:')
-    res_changes('food', f'+{200 * State.tech_effects["meat"]}')
+    res_changes('food', f'+{int(200 * State.tech_effects["meat"])}')
 
 
 def parade():
@@ -323,16 +325,49 @@ def india():
 
 def fishing():
     answer = int(input('Рыбалка (1 лодка: -40 золота, +120 еды) (Сколько лодок вы хотите купить): '))
-    res_changes('money', f'-{40 * answer}', 'food', f'+{120 * answer}')
+    res_changes('money', f'-{int(40 * answer)}', 'food', f'+{int(120 * answer)}')
 
 
 def pirates():
     print('Пираты напали на наши торговые суда!')
-    res_changes('money', f'-{0.3 * State.money}', 'food', f'-{0.2 * State.food}', 'distemper', '+3')
+    res_changes('money', f'-{int(0.3 * State.money)}', 'food', f'-{int(0.2 * State.food)}', 'distemper', '+3')
 
 
 def tornado():
-    print('По вашим землям прошлось мощное торнадо, оно уничтожило ')
+    to_destroy = []
+    for construction in State.buildings.keys():
+        if State.buildings[construction]:
+            to_destroy.append(construction)
+    destroyed = choice(to_destroy)
+    print(f'По вашим землям прошлось мощное торнадо, оно уничтожило: {destroyed}')
+    State.buildings[destroyed] = 0
+
+
+def wonder_of_nature():
+    wonders = {'"Большое плато"': ['money', '+400'], 'озеро "Виктория"': ['food', '+2000'],
+               '"Большой барьерный риф"': 'acknoledgment', '"Копи царя Соломона"': building,
+               '"Эльдорадо"': ['money', '+500'], '"Источник молодости"': ['distemper', '-10'],
+               '"Гибралтар"': ['distemper', '-10'], 'гора "Фудзиями"': ['army', '+50']}
+    wonder = choice(list(wonders.keys()))
+    print(f'Вы обнарушили чудо природы: {wonder}')
+    if type(wonders[wonder]) == list:
+        res_changes(wonders[wonder][0], wonders[wonder][1])
+    else:
+        wonders[wonder]()
+
+
+def hero():
+    heroes = ['Чингисхан', 'Тамерлан', 'Наполеон', 'Юлий Цезарь', 'Георгий Жуков', 'Александр Невский']
+    new_hero = choice(heroes)
+    print(f'У вас в армии появляется великий полководец {new_hero}!')
+    res_changes('army', f'+{int(State.army * 0.3)}')
+
+
+def city_state():
+    city_states = ['Сингапур', 'Монако', 'Ватикан', 'Гонконг', 'Макао']
+    new_city_state = choice(city_states)
+    print(f'Вы нашли город-государство {new_city_state}! Его жители присягают вам на веру!')
+    res_changes('land', '+20', 'people', '+10')
 
 
 # TODO
