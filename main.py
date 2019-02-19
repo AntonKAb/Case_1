@@ -39,7 +39,15 @@ def output():
                                                                State.year, State.land, State.food, State.army))
     
 
-
+def records():
+    x = 'a'
+    best = {}
+    best['a'] = State.year
+    x += '1'
+    records_ = dict(sorted(best.iteritems(), key=operator.itemgetter(1), reverse=True)[:5])
+    print('Рекорды:', records_)
+    
+    
 def seed_own():
     print('Король, сколько зерна песеять?')
     am_to_seat = int(input())
