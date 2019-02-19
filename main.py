@@ -281,6 +281,22 @@ def wizard():
             if ready.upper() == 'НЕТ':
                 print('До встречи, Король.')
 
+def fish_sell():
+    print('Король, царь соседнего госудаоства готов купить у нас немного рыбы. (2 ве золотых за штуку.')
+    fishsell = int(input('Сколько рыбы прождать?:'))
+    if State.food < fishsell:
+        while fishsell > State.food:
+            print('Не хватает рыбы. Введите другое значение.')
+            fishsell = int(input())
+        State.food -= fishsell
+        State.money += fishsell * 2
+        print('Food -', fishsell)
+        print('Money +', fishsell * 2)
+    if State.food >= fishsell:
+        State.food -= fishsell
+        State.money += fishsell * 2
+        print('Food -', fishsell)
+        print('Money +', fishsell * 2)
 
 # TODO
 # Game restart function.
