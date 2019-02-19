@@ -24,6 +24,7 @@ class State:
     army = 100
     year = 0
     land = 130
+    technologies_1 = {'cattle_breeding': 0, 'agriculture': 0, 'hunting': 0}
     technologies = {'cattle_breeding': 0, 'agriculture': 0, 'hunting': 0, 'warfare': 0, 'mansory': 0, 'religion': 0,
                     'rivalry': 0}
     buildings = {'windmill': 0, 'accounting_chamber': 0, 'moulin_rouge': 0}
@@ -33,8 +34,8 @@ class State:
 def acknowledgement():
     available_technologies = []
     if turn_counter <= 4:
-        for obj in State.technologies[:3].keys():
-            if not State.technologies[obj]:
+        for obj in State.technologies_1.keys():
+            if not State.technologies_1[obj]:
                 available_technologies.append(obj)
         available_message = ACKNOWLEDGEMENT[0]
         for obj in available_technologies:
@@ -155,10 +156,10 @@ def random_events():
 
 def output():
     print('Деньги: {} | Зерно: {} | Народ: {} | Смута: {} '
-          '| Год: {} | Замля: {} | Еда: {} | Армия: {}'.format(State.money, 
+          '| Год: {} | Замля: {} | Еда: {} | Армия: {}'.format(State.money,
                                                                State.food, State.people, State.distemper,
                                                                State.year, State.land, State.food, State.army))
-    
+
 
 def seed_own():
     print(SEED_OWN[0])
@@ -750,6 +751,7 @@ def city_state():
 turn_counter = 1
 life = True
 while life is True:
+    output()
     seed_own()
     seed_sell()
     seed_buy()
