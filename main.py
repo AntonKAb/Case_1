@@ -5,6 +5,7 @@ Developers: Anufrienko K., Kabaev A., Lankevich S.
 
 
 from random import randint, choice
+from ru_local import *
 
 
 class Game:
@@ -28,110 +29,121 @@ class State:
     buildings = {'windmill': 0, 'accounting_chamber': 0, 'moulin_rouge': 0}
     tech_effects = {'food': 1.0, 'money': 1.0, 'people': 1.0, 'distemper': 1.0, 'army': 1.0, 'land': 1.0}
 
+
 def acknowledgement():
     available_technologies = []
     if turn_counter <= 4:
         for obj in State.technologies[:3].keys():
             if not State.technologies[obj]:
                 available_technologies.append(obj)
-        available_message = 'Доступны для изучения: '
+        available_message = ACKNOWLEDGEMENT[0]
         for obj in available_technologies:
             available_message += obj + ', '
         available_message = available_message[:-2]
         print(available_message)
-        answer = input('Выберите технологию для изучения: ')
+        answer = input(ACKNOWLEDGEMENT[1])
         while answer not in available_technologies:
-            answer = input('Введите корректное название ремесла: ')
+            answer = input(ACKNOWLEDGEMENT[2])
         later_event(2, res_changes(answer, '+1'))
     if turn_counter > 4:
         for obj in State.technologies.keys():
             if not State.technologies[obj]:
                 available_technologies.append(obj)
-        available_message = 'Доступны для изучения: '
+        available_message = ACKNOWLEDGEMENT[3]
         for obj in available_technologies:
             available_message += obj + ', '
         available_message = available_message[:-2]
         print(available_message)
-        answer = input('Выберите технологию для изучения: ')
+        answer = input(ACKNOWLEDGEMENT[4])
         while answer not in available_technologies:
-            answer = input('Введите корректное название ремесла: ')
+            answer = input(ACKNOWLEDGEMENT[5])
         later_event(2, res_changes(answer, '+1'))
         later_event(2, answer)
 
-# TODO
-# Building functions.
-
 
 def moulin_rouge():
-    print('Увеселительное кабарэ для молодых и взрослых бизнес-информатиков и бизнес-информатичек, где можно отдохнуть и телом и душой!')
+    print(MOULIN_ROUGE)
     res_changes('people', f'+{int((percent_changes(State.people, 3)))}'
                 'distemper', f'-{int(percent_changes(State.distemper, 30))}'
                 'money', f'-500')
+
+
 def church():
-    print('Церковь построена, милорд!')
+    print(CHURCH)
     res_changes('distemper', f'-{(percent_changes(State.distemper, 50))}'
                 'money', f'-2000')
 
+
 def accounting_chamber():
-    print('Теперь у вас есть счетная палата.')
+    print(ACCOUNTING_CHAMBER)
     res_changes('money', f'+{int(percent_changes(State.money, 35))}')
 
+
 def windmill():
-    print('Мельница готова, король!')
+    print(WINDMILL)
     res_changes('food', f'+{int(percent_changes(State.food, 20))}')
     res_changes('money', f'-{int(percent_changes(State.money, 50))}')
 
+
 def barracks():
-    print('Казармы готовы, Ваше Величество')
+    print(BARRACKS)
     res_changes('money', f'-600')
     res_changes('army', f'+{int(percent_changes(State.army, 35))}')
 
 
-# TODO
-#Technologies functions.
 def cattle_breeding():
-    print('Вы изучили скотоводство, теперь вы будете получать больше еды')
+    print(CATTLE_BREEDING)
     State.tech_effects.update({'food': 1.25})
     State.money -= 400
 
+
 def agriculture():
-    print('Вы изучили земеледелие, теперь вы будете получать больше еды.')
+    print(AGRICULTURE)
     State.tech_effects.update({'food': 1.25})
     State.money -= 400
+
+
 def sailing():
-    print('Вы изучили мореходство. Теперь вы можете ловить рыбу и торговать ей! У вас также появились военные корабли.')
+    print(SAILING)
     State.tech_effects.update({'food': 1.25})
     State.tech_effects.update({'army': 1.15})
     State.money -= 400
+
+
 def hunting():
-    print('Вы познали искусство охоты. Бизнес информатики будут добывать для вас мясо!')
+    print(HUNTING)
     State.tech_effects.update({'food': 2})
     State.money -= 400
+
+
 def warfare():
-    print('Вы постигли новых высот в военном деле, поздравляю мой государь!')
+    print(WARFARE)
     State.buildings.update({'Казармы': 0})
     State.tech_effects.update({'army': 1.33})
     State.money -= 400
+
+
 def religion():
-    print('Вы приняли религию, теперь можете построить церковь. Это существенно сократит протестные настроения в стране.')
+    print(RELIGION)
     State.buildings.update({'Church': 0})
     State.money -= 400
+
+
 def masonry():
-    print('Вы изучили каменную кладку. Вам доступны новые постройки и ресурсы.')
+    print(MASONRY)
     State.buildings.update({'The Great Wall': 0})
     State.money -= 400
+
+
 def rivalry():
-    print('Честь, отвага и благородие отныне не чужды бизнес информатикам. Ожидайте турниры в вашу честь!')
+    print(RIVALRY)
     State.tech_effects.update({'army': 1.5})
     State.money -= 400
 
 
-#TODO
-#Cycle functions.
-
 def random_events():
     negative_events = [village_fire, city_fire, flood, conspiracy, strike, plague, separatism, war, spy,
-                       cruel_winter, pirates, tornado]
+                       cruel_winter, pirates]
     positive_events = [discovery, road, hero, wonder_of_nature, forest_territory, city_state]
     if State.technologies.get('masonry') == 1:
         positive_events.append(brilliants)
@@ -141,8 +153,6 @@ def random_events():
     choice(positive_events)
 
 
-# TODO
-# Events functions. (Anton)
 def output():
     print('Деньги: {} | Зерно: {} | Народ: {} | Смута: {} '
           '| Год: {} | Замля: {} | Еда: {} | Армия: {}'.format(State.money, 
@@ -150,12 +160,11 @@ def output():
                                                                State.year, State.land, State.food, State.army))
     
 
-
 def seed_own():
-    print('Король, сколько зерна песеять?')
+    print(SEED_OWN[0])
     am_to_seat = int(input())
     State.food -= am_to_seat
-    print('Король, сколько зерна раздать людям?')
+    print(SEED_OWN[1])
     am_to_give = int(input())
     State.food -= am_to_give
     if 1000 <= am_to_give < 2500 and State.people < 300:
@@ -170,10 +179,10 @@ def seed_own():
         State.people = State.people * 1.05
     if am_to_give >= 5000 and State.people >= 300:
         State.people = State.people * 1.08
-    af_event_1 = 'Год был не урожайным, мы  выростили мало.'
-    af_event_2 = 'Просто замечательный сезон, мы вырастили в двое больше!'
-    af_event_3 = 'Хороший урожай, милорд.'
-    af_event_4 = 'Ужасный урожай, милорд. Мы не вырастили ничего!'
+    af_event_1 = SEED_OWN[2]
+    af_event_2 = SEED_OWN[3]
+    af_event_3 = SEED_OWN[4]
+    af_event_4 = SEED_OWN[5]
     ev_all = [af_event_4, af_event_1, af_event_2, af_event_3]
     ev_r = choice(ev_all)
     if ev_r == af_event_1:
@@ -185,18 +194,18 @@ def seed_own():
     elif ev_r == af_event_4 and State.people > 300 and State.food < 5000:
         State.people = State.people * 0.85
         State.distemper += 5
-        print('Такими темпами в стране начнется голод!')
-        print('Смута + 5')
+        print(SEED_OWN[6])
+        print(SEED_OWN[7])
     elif ev_r == af_event_4 and (State.food >= 5000 or State.people < 300):
         pass
 
 
 def seed_sell():
-    print('Король, соседнее государство хочет купить зерно(2 золотых за зернышко). Сколько продать?')
+    print(SEED_SELL[0])
     am_sell = int(input())
     if State.food < am_sell:
         while am_sell > State.food:
-            print('Не хватает зерна.')
+            print(SEED_SELL[1])
             am_sell = int(input())
         State.food -= am_sell
         State.money += am_sell * 2
@@ -206,11 +215,11 @@ def seed_sell():
 
 
 def seed_buy():
-    print('Король, соседнее государство готово продать зерно(2 золотых за зернышко). Сколько купить?')
+    print(SEED_BUY[0])
     am_buy = int(input())
     if State.money < am_buy * 2:
         while am_buy * 2 > State.money:
-            print('Не хватает денег.')
+            print(SEED_BUY[1])
             am_buy = int(input())
         State.food += am_buy
         State.money -= am_buy * 2
@@ -220,82 +229,80 @@ def seed_buy():
 
 
 def war():
-    event = 'Король Испании развязал войну на Севере.Он просит Вас принять участие в ней на его стороне. '\
-           'Желаете принять участие? (30 солдат, 5 000 золотых).В случае победы Испания обещает вам 12 000 золотых.'
+    event = WAR[0]
     print(event)
     answ_w = input()
-    if answ_w.upper() == 'ДА' and State.money >= 5000 and State.army >= 30:
+    if answ_w.upper() == WAR[1] and State.money >= 5000 and State.army >= 30:
         State.money -= 5000
         State.army -= 30
-    elif answ_w.upper() == 'НЕТ':
+    elif answ_w.upper() == WAR[2]:
         pass
-    elif answ_w.upper() == 'ДА' and (State.money < 5000 or State.army < 30):
-        print('Король, у Вас недостаточно ресурсов.')
+    elif answ_w.upper() == WAR[1] and (State.money < 5000 or State.army < 30):
+        print(WAR[3])
     later_event(1, war_exodus)
 
 
 def war_exodus():
-        event_af1 = 'Испанский Король проиграл войну.'
-        event_af2 = 'Испания побеждает в войне!!!'
+        event_af1 = WAR_EXODUS[0]
+        event_af2 = WAR_EXODUS[1]
         con_war = choice([event_af1, event_af2])
         print(con_war)
         if con_war == event_af1:
-            print('Нашему государству ничего не достанется, Кололь.')
-            print('Смута + 3')
+            print(WAR_EXODUS[2])
+            print(WAR_EXODUS[3])
             State.distemper += 3
         if con_war == event_af2:
-            print('В казну поступили обещанные 12 000 золотых. Из 100 солдат выжило только 25.')
+            print(WAR_EXODUS[4])
             State.money += 12000
             State.army += 25
 
 
 def separatism():
-    print('Король, Северное графство выступило против Вас и хочет отделиться? Отправить войска?')
+    print(SEPARATISM[0])
     answr = input()
-    evi_1 = 'Восстание подавлено!'
-    evi_2 = 'Нам не удалось подавить сепаратистов...'
-    if answr.upper() == 'ДА':
-        print('Сколько людей отправить?')
+    evi_1 = SEPARATISM[1]
+    evi_2 = SEPARATISM[2]
+    if answr.upper() == SEPARATISM[3]:
+        print(SEPARATISM[4])
         army = int(input())
         if State.army >= army:
             State.army -= army
         if State.army < army:
             while army > State.army:
-                print('Не хватает солдат.')
+                print(SEPARATISM[5])
                 army = int(input())
             State.army -= army
         if army < 20:
-            print(evi_2, 'Ни один солдат не вернулся.')
+            print(evi_2, SEPARATISM[6])
             State.land -= 30
             State.people -= 15
             State.army -= army
             State.distemper += 3
-            print('Замля - 30')
-            print('Народ - 15')
-            print('Army - ', army)
-            print('Смута + 3')
+            print(SEPARATISM[7])
+            print(SEPARATISM[8])
+            print(SEPARATISM[9], army)
+            print(SEPARATISM[10])
         if army >= 20:
             print(evi_1)
-    if answr.upper() == 'НЕТ':
+    if answr.upper() == SEPARATISM[11]:
         State.land -= 30
         State.people -= 15
-        print('Замля - 30')
-        print('Народ - 15')
+        print(SEPARATISM[12])
+        print(SEPARATISM[13])
 
 
 def discovery():
-    print('Король, наши ученые предлагают отправить экспедицию на Юг(10 человек). Дадите свое согласие и'
-          ' средства(1 000 золотых)')
+    print(DISCOVERY[0])
     answer = input()
-    if answer.upper() == 'ДА' and State.money >= 1000 and State.people >= 10:
+    if answer.upper() == DISCOVERY[1] and State.money >= 1000 and State.people >= 10:
         State.money -= 1000
         State.people -= 10
-        print('Деньги - 1 000')
-        print('Народ - 10')
-    if answer.upper() == 'НЕТ':
+        print(DISCOVERY[2])
+        print(DISCOVERY[3])
+    if answer.upper() == DISCOVERY[4]:
         pass
-    ev_1_ = 'Король, экспедиционный корпус вернулся с открытиями и ресурсами!'
-    ev_2_ = 'Король, нмикто не вернулся из экспедиции.'
+    ev_1_ = DISCOVERY[5]
+    ev_2_ = DISCOVERY[6]
     d_exodus = choice([ev_1_, ev_2_])
     if d_exodus == ev_1_:
         print(ev_1_)
@@ -304,121 +311,117 @@ def discovery():
         State.people += 10
         if State.distemper >= 10:
             State.distemper -= 10
-            print("Смута - 10")
-        print('Зерно + 420')
-        print('Замля + 40')
+            print(DISCOVERY[7])
+        print(DISCOVERY[8])
+        print(DISCOVERY[9])
     if d_exodus == ev_2_:
-        print('Король, экспедиционый корпус не вернулся')
+        print(DISCOVERY[10])
 
 
 def spy():
-    print('Король, до нас доли слухи, что в стране есть шпионы. Усилить гарнизон? (320 золотых?)')
+    print(SPY[0])
     ans = input()
-    if ans.upper() == 'ДА':
-        catch = "Шпион пойман! Мы смогли предовратить диверсию!"
-        lose = 'Слухи остаются слухами.'
+    if ans.upper() == SPY[1]:
+        catch = SPY[2]
+        lose = SPY[3]
         d_yes = choice([catch, lose])
         if d_yes == catch:
             print(catch)
             State.distemper -= 3
-            print('Смута - 3')
-            print('Деньги - 320')
+            print(SPY[4])
+            print(SPY[5])
         if d_yes == lose:
-            print('Деньги - 320')
-    if ans.upper() == 'НЕТ':
-        lose_1 = 'Слухи оказались правдой. Шпион ограбил казну и убил несколько придворных.'
-        bad_l = 'Слухи остаются слухами.'
+            print(SPY[6])
+    if ans.upper() == SPY[7]:
+        lose_1 = SPY[8]
+        bad_l = SPY[9]
         d_no = choice([bad_l, lose_1])
         if d_no == lose_1:
             print(lose_1)
             State.distemper += 13
             State.money -= 520
-            print('Смута + 13')
-            print('Деньги - 520')
+            print(SPY[10])
+            print(SPY[11])
 
 
 def husbrandy():
-    print('Король, сколько земли выделить для выпаски скота?')
+    print(HUSBRANDY[0])
     dision = int(input())
     if dision <= State.land:
         State.land -= dision
         State.food += dision * 10
-        print('Замля -', dision)
-        print('Еда + ', dision * 10)
+        print(HUSBRANDY[1], dision)
+        print(HUSBRANDY[2], dision * 10)
     if dision > State.land:
         while dision > State.land:
             dision = int(input())
         State.land -= dision
         State.food += dision * 10
-        print('Замля -', dision)
-        print('Еда + ', dision * 10)
+        print(HUSBRANDY[3], dision)
+        print(HUSBRANDY[4], dision * 10)
 
 
 def wizard():
-    print("Король, у входа в дворец стоит странник. Он называет себя чародеем и просит встречи с Вашим высочеством. "
-          "Нам впустить его?")
+    print(WIZARD[0])
     chose = input()
-    if chose.upper() == 'ДА':
-        print('Чародей: Здравствуйте Король, давайте сыграем  в одну игру?')
-        print('*Ваш ответ Король*:')
+    if chose.upper() == WIZARD[1]:
+        print(WIZARD[2])
+        print(WIZARD[3])
         play = input()
-        if play.upper() == 'ДА':
-            print('Чародей: Я загадываю одно слово из: Дракон, Рыцарь, Меч, Огонь. А вы должни отгадать. \n '
-                  'Если победите подряд два раза, одним щелчком пальцев  решу ваши проблемы в стране, но за каждый '
-                  'проигрыш отдаете мне 50 золотых. Вы готовы? \n (Введите да или нет)')
+        if play.upper() == WIZARD[4]:
+            print(WIZARD[5])
             ready = input()
             perm = True
             var = 0
-            if ready.upper() == 'ДА':
-                guess = choice(['Дракон', 'Рыцарь', 'Меч', 'Огонь'])
+            if ready.upper() == WIZARD[6]:
+                guess = choice([WIZARD[7], WIZARD[8], WIZARD[9], WIZARD[10]])
                 while perm:
-                    print('Я загадал. Ваш ответ.')
+                    print(WIZARD[11])
                     predict = input()
                     if predict.upper() == guess.upper():
                         var += 1
                         if var < 2:
-                            print('Правильно. Идем дальше?')
+                            print(WIZARD[12])
                             dici = input()
-                            if dici.upper() == 'НЕТ':
+                            if dici.upper() == WIZARD[13]:
                                 perm = False
-                            if dici.upper() == 'ДА':
+                            if dici.upper() == WIZARD[14]:
                                 perm = True
                         if var == 2:
                             perm = False
                     if predict.upper() != guess.upper():
-                        print('Увы, вы ошиблись. Идем дальше?')
+                        print(WIZARD[15])
                         var = var * 0
-                        dici= input()
-                        if dici.upper() == 'НЕТ':
+                        dici = input()
+                        if dici.upper() == WIZARD[16]:
                             perm = False
-                            print('До встречи, Король.')
-                        if dici.upper() == 'ДА':
+                            print(WIZARD[17])
+                        if dici.upper() == WIZARD[18]:
                             perm = True
                 if var == 2:
-                    print('Кажется вы победили, Король. Вот Ваш приз.')
-            if ready.upper() == 'НЕТ':
-                print('До встречи, Король.')
+                    print(WIZARD[19])
+            if ready.upper() == WIZARD[20]:
+                print(WIZARD[21])
 
 
 def fish_sell():
-    print('Король, царь соседнего госудаоства готов купить у нас немного рыбы. (2 ве золотых за штуку.')
-    fishsell = int(input('Сколько рыбы прождать?:'))
+    print(FISH_SELL[0])
+    fishsell = int(input(FISH_SELL[1]))
     if State.food < fishsell:
         while fishsell > State.food:
-            print('Не хватает рыбы. Введите другое значение.')
+            print(FISH_SELL[2])
             fishsell = int(input())
         State.food -= fishsell
         State.money += fishsell * 2
-        print('Еда -', fishsell)
-        print('Деньги +', fishsell * 2)
+        print(FISH_SELL[3], fishsell)
+        print(FISH_SELL[4], fishsell * 2)
     if State.food >= fishsell:
         State.food -= fishsell
         State.money += fishsell * 2
-        print('Еда -', fishsell)
-        print('Деньги +', fishsell * 2)
+        print(FISH_SELL[5], fishsell)
+        print(FISH_SELL[6], fishsell * 2)
 
-# TODO
-# Game restart function.
+
 def restart():
     State.money = 1000
     State.food = 10000
@@ -436,14 +439,14 @@ def building():
     for obj in State.buildings.keys():
         if not State.buildings[obj]:
             available_buildings.append(obj)
-    available_message = 'Вы можете построить: '
+    available_message = BUILDING[0]
     for obj in available_buildings:
         available_message += obj + ', '
     available_message = available_message[:-2]
     print(available_message)
-    answer = input('Введите название постройки: ')
+    answer = input(BUILDING[1])
     while answer not in available_buildings:
-        answer = input('Введите корректное название постройки: ')
+        answer = input(BUILDING[2])
     later_event(1, res_changes(answer, '+1'))
 
 
@@ -458,41 +461,41 @@ def res_changes(*args):
                 State.land += int(change) * State.tech_effects['land']
             else:
                 State.land -= int(change)
-            print(f'Земля: {value}{change}')
+            print(f'{RES_CHANGES[0]} {value}{change}')
         elif res == 'people':
             if value == '+':
                 State.people += int(change) * State.tech_effects['people']
             else:
                 State.people -= int(change)
-            print(f'Жители: {value}{change}')
+            print(f'{RES_CHANGES[1]} {value}{change}')
         elif res == 'distemper':
             if value == '+':
                 State.distemper += int(change) * State.tech_effects['distemper']
             else:
                 State.distemper -= int(change)
-            print(f'Смута: {value}{change}')
+            print(f'{RES_CHANGES[2]} {value}{change}')
         elif res == 'food':
             if value == '+':
                 State.food += int(change) * State.tech_effects['food']
             else:
                 State.food -= int(change)
-            print(f'Зерно: {value}{change}')
+            print(f'{RES_CHANGES[3]} {value}{change}')
         elif res == 'money':
             if value == '+':
                 State.money += int(change) * State.tech_effects['money']
             else:
                 State.money -= int(change)
-            print(f'Деньги: {value}{change}')
+            print(f'{RES_CHANGES[4]} {value}{change}')
         elif res == 'army':
             if value == '+':
                 State.army += int(change) * State.tech_effects['army']
             else:
                 State.army -= int(change)
-            print(f'Армия: {value}{change}')
+            print(f'{RES_CHANGES[5]} {value}{change}')
         elif res in State.buildings:
             if value == '+':
                 State.buildings[res] += int(change)
-            print(f'Вы построили: {res}')
+            print(f'{RES_CHANGES[5]} {res}')
 
 
 # Postponing event function.
@@ -511,7 +514,7 @@ def later_event(*args):
 def give_answer(text, answers):
     answer = input(text + answers + '\n')
     while answer not in ['1', '2']:
-        print(f'Мой король, не могли бы вы повторить {answers}: ')
+        print(f'{GIVE_ANSWER} {answers}: ')
         answer = input(text + answers + '\n')
     return answer
 
@@ -522,7 +525,7 @@ def percent_changes(resource, percent):
 
 
 def village_fire():
-    print('Король, в одной из наших деревень произошёл пожар! Погибли жители, сгорела земля и часть зерна!')
+    print(VILLAGE_FIRE)
     res_changes('people', f'-{int(percent_changes(State.people, 5))}',
                 'food', f'-{int(percent_changes(State.food, 5))}',
                 'land', f'-{int(percent_changes(State.land, 3))}',
@@ -530,14 +533,14 @@ def village_fire():
 
 
 def city_fire():
-    print('Король, в одном из наших городов произошёл пожар! Погибли жители, сгорела часть денег!')
+    print(CITY_FIRE)
     res_changes('people', f'-{int(percent_changes(State.people, 5))}',
                 'money', f'-{int(percent_changes(State.money, 5))}',
                 'distemper', f'+{int(randint(2, 10))}')
 
 
 def flood():
-    print('Король, произошло наводнение! Вода смыла наши посевы и унесла жизни нескольких сельчан!')
+    print(FLOOD)
     res_changes('people', f'-{int(percent_changes(State.people, 5))}',
                 'food', f'-{int(percent_changes(State.food, 10))}',
                 'land', f'+{int(percent_changes(State.land, 4))}',
@@ -545,8 +548,8 @@ def flood():
 
 
 def conspiracy():
-    text = 'Король, против вас готовится заговор. '
-    answers = 'Мы можем нанять шпиона(1), который отловит всех заговорщиков, или ждать, пока они сделают первый шаг(2)'
+    text = CONSPIRACY[0]
+    answers = CONSPIRACY[1]
     answer = give_answer(text, answers)
     if answer == '1':
         res_changes('money', f'-{int(State.money * 0.2)}')
@@ -556,8 +559,8 @@ def conspiracy():
 
 
 def strike():
-    text = 'Рабочие устроили забастовку.'
-    answers = 'Мы можем отдать им часть денег и зерна(1) или нам придется и дальше смотреть на этот беспредел (2)'
+    text = STRIKE[0]
+    answers = STRIKE[1]
     answer = give_answer(text, answers)
     if answer == '1':
         res_changes('money', '-100', 'food', '-50')
@@ -567,36 +570,33 @@ def strike():
 
 def plague_after():
     State.people -= 10
-    print('Жители: -10 (Чума)')
+    print(PLAGUE_AFTER)
 
 
 def plague():
-    print('На юге нашего царства появилась началась какая-то эпидемия,\
-     никто из наших докторов ни разу не встречался с подобным!')
+    print(PLAGUE)
     for i in range(4):
         later_event(i, plague_after)
     res_changes('people', '-50')
 
 
 def new_world():
-    print('Где-то в дальных землях Колумб открывает Америку!')
+    print(NEW_WORLD)
 
 
 def columbus_lose():
-    print('Экспедиция Колумба попала в шторм, никто не выжил.')
+    print(COLUMBUS_LOSE)
 
 
 def columbus_win():
-    print('Колумб достиг Америки! Экспедиция закончилась успешно! И прошла она далеко не зря: ')
+    print(COLUMBUS_WIN)
     res_changes('money', '+2000', 'food', '+3000',
                 'land', '+50', 'distemper', '-5')
 
 
 def columbus():
-    text = 'Какой-то бродяга с улицы по имени Колумб собирает средства на экспедицию для\
-     поиска нового пути в Индию, милорд.\n Он просит вас проспонсировать его,\
-      ему нужно 50 золота: '
-    answers = '(1 - дать; 2 - отказаться)'
+    text = COLUMBUS[0]
+    answers = COLUMBUS[1]
     answer = give_answer(text, answers)
     if answer == '2':
         choice(later_event(4, new_world), later_event(4, columbus_lose))
@@ -606,18 +606,18 @@ def columbus():
 
 
 def brilliants():
-    print('Ваши подданые нашли пещеру с бриллиантами!')
+    print(BRILLIANTS)
     res_changes('money', f'+{int(str(percent_changes(State.money, 20)))}')
 
 
 def forest():
     State.money += 10
-    print('Деньги: +10 (Лес)')
+    print(FOREST)
 
 
 def forest_territory():
-    text = 'Сельчане просят ваше разрешение на срубку леса, чтобы построить себе новые дома '
-    answers = '(1 - дать разрешение, 2 - оставить лес) '
+    text = FOREST_TERRITORY[0]
+    answers = FOREST_TERRITORY[1]
     answer = give_answer(text, answers)
     if answer == '2':
         res_changes('distemper', '+3')
@@ -633,7 +633,7 @@ def road_trade():
 
 
 def road():
-    print('Наши рабочие построили Золотой путь!(+100 к золоту каждый ход)')
+    print(ROAD)
     res_changes('money', '+100')
     later_event(1, road_trade)
 
@@ -643,60 +643,53 @@ def winter_day():
 
 
 def cruel_winter():
-    print('Началась зима')
-    print('Мы будем терять 100 единиц зерна каждый ход до её окончания')
+    print(CRUEL_WINTER[0])
+    print(CRUEL_WINTER[1])
     res_changes('food', '-100')
     for i in range(1, randint(2, 5)):
         later_event(i, winter_day)
 
 
 def tournament():
-    print('Начался ежегодный рыцарский турнир в вашу честь! Это большой праздник для всего вашего королевства!')
+    print(TOURNAMENT[0])
     State.distemper *= 0.4
-    print('Смута сбрасывается до 40% от текущей')
-
-
-def expo():
-    print('Учёные всех королевств решили провести научную выставку в нашей столице.')
-    State.buildings['universities'] += 1
+    print(TOURNAMENT[1])
 
 
 def elephants():
-    text = 'Торговец из Кении предлагает вам купить африканских слонов за 200 монет. '
-    answers = '(1 - купить, 2 - и коней хватит) '
+    text = ELEPHANTS[0]
+    answers = ELEPHANTS[1]
     answer = give_answer(text, answers)
     if answer == '1':
-        print('Отличные слоны!')
+        print(ELEPHANTS[2])
         res_changes('money', '-300', 'army', '+200')
 
 
 def hunt():
-    print('Охота:')
+    print(HUNT)
     res_changes('food', f'+{int(200 * State.tech_effects["meat"])}')
 
 
 def parade():
-    print('Парад в столице')
+    print(PARADE)
     res_changes('army', '+300', 'money', '-500')
 
 
 def child():
-    print('Поздравляю с рождением принца, мой король!')
+    print(CHILD)
     Game.prince = True
     res_changes('distemper', '-5')
 
 
 def indian_success():
-    print('Вернулась экспедиция из Индии!!!')
+    print(INDIAN_SUCCESS)
     res_changes('money', '+4000')
 
 
 def india():
     if State.army >= 50:
-        text = 'Купцы хотят отправиться в Индию,\
-         но для путешествия им нужно сопровождение,\
-          они просят у вас часть армии (50 войнов). '
-        answers = '(1) - отправить войнов. (2) - отказаться от предложения. '
+        text = INDIA[0]
+        answers = INDIA[1]
         answer = give_answer(text, answers)
         if answer == '1':
             res_changes('army', '-50')
@@ -708,32 +701,32 @@ def india():
 
 
 def fishing():
-    answer = int(input('Рыбалка (1 лодка: -40 золота, +120 еды) (Сколько лодок вы хотите купить): '))
+    answer = int(input(FISHING))
     res_changes('money', f'-{int(40 * answer)}', 'food', f'+{int(120 * answer)}')
 
 
 def pirates():
-    print('Пираты напали на наши торговые суда!')
+    print(PIRATES)
     res_changes('money', f'-{int(0.3 * State.money)}', 'food', f'-{int(0.2 * State.food)}', 'distemper', '+3')
 
 
-def tornado():
-    to_destroy = []
-    for construction in State.buildings.keys():
-        if State.buildings[construction]:
-            to_destroy.append(construction)
-    destroyed = choice(to_destroy)
-    print(f'По вашим землям прошлось мощное торнадо, оно уничтожило: {destroyed}')
-    State.buildings[destroyed] = 0
+# def tornado():
+#     to_destroy = []
+#     for construction in State.buildings.keys():
+#         if State.buildings[construction]:
+#             to_destroy.append(construction)
+#     destroyed = choice(to_destroy)
+#     print(f'По вашим землям прошлось мощное торнадо, оно уничтожило: {destroyed}')
+#     State.buildings[destroyed] = 0
 
 
 def wonder_of_nature():
-    wonders = {'"Большое плато"': ['money', '+400'], 'озеро "Виктория"': ['food', '+2000'],
-               '"Большой барьерный риф"': 'acknoledgment', '"Копи царя Соломона"': building,
-               '"Эльдорадо"': ['money', '+500'], '"Источник молодости"': ['distemper', '-10'],
-               '"Гибралтар"': ['distemper', '-10'], 'гора "Фудзиями"': ['army', '+50']}
+    wonders = {WONDERS[0]: ['money', '+400'], WONDERS[1]: ['food', '+2000'],
+               WONDERS[2]: acknowledgement, WONDERS[3]: building,
+               WONDERS[4]: ['money', '+500'], WONDERS[5]: ['distemper', '-10'],
+               WONDERS[6]: ['distemper', '-10'], WONDERS[7]: ['army', '+50']}
     wonder = choice(list(wonders.keys()))
-    print(f'Вы обнарушили чудо природы: {wonder}')
+    print(f'{WONDERS[8]} {wonder}')
     if type(wonders[wonder]) == list:
         res_changes(wonders[wonder][0], wonders[wonder][1])
     else:
@@ -741,16 +734,16 @@ def wonder_of_nature():
 
 
 def hero():
-    heroes = ['Чингисхан', 'Тамерлан', 'Наполеон', 'Юлий Цезарь', 'Георгий Жуков', 'Александр Невский']
+    heroes = HEROES
     new_hero = choice(heroes)
-    print(f'У вас в армии появляется великий полководец {new_hero}!')
+    print(f'{HERO} {new_hero}!')
     res_changes('army', f'+{int(State.army * 0.3)}')
 
 
 def city_state():
-    city_states = ['Сингапур', 'Монако', 'Ватикан', 'Гонконг', 'Макао']
+    city_states = CITY_STATES
     new_city_state = choice(city_states)
-    print(f'Вы нашли город-государство {new_city_state}! Его жители присягают вам на веру!')
+    print(f'{CITY_STATE[0]} {new_city_state}! {CITY_STATE[1]}!')
     res_changes('land', '+20', 'people', '+10')
 
 
@@ -777,5 +770,5 @@ while life is True:
         life = False
     else:
         pass
-print('Ваше правление не назовешь успешным, народ бизнес-информатиков не хочет более видеть столь беспомощного правителя...')
+print(END)
 exit()
