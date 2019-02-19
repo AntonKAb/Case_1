@@ -15,7 +15,9 @@ class Game:
 
 # TODO
 # Government object.
-class State(1000, 10000, 200, 0, 0, 130):
+
+
+class State:
     money = 1000
     food = 10000
     people = 200
@@ -24,39 +26,43 @@ class State(1000, 10000, 200, 0, 0, 130):
     army = 100
     year = 0
     land = 130
-    tech_effects = {'money': 1, 'food': 1, 'people': 1, 'army': 1, 'land': 1, 'distemper': 1, 'seed': 1, 'meat': 1}
-    buildings = {'universities': 0, }
+    buildings = {'university': 0}
+    tech_effects = {'food': 1, 'money': 1, 'people': 1, 'distemper': 1, 'army': 1, 'land': 1}
 
 
 # TODO
 # Events functions. (Anton)
 
 # TODO
-
-# Postponing event function.
-def later_event(turn_to_it, func):
-    try:
-        event_list = Game.turns[Game.turn + turn_to_it]
-        Game.turns.update({Game.turn + turn_to_it: event_list.append(func())})
-    except KeyError:
-        event_list = []
-        Game.turns.update({Game.turn + turn_to_it: event_list.append(func())})
-
-
-# Getting answer function.
-def give_answer(text, answers):
-    answer = input(text + answers + '\n')
-    while answer not in ['1', '2']:
-        print(f'Мой король, не могли бы вы повторить {answers}: ')
-    return answer
+# Game restart function.
+def restart():
+    State.money = 1000
+    State.food = 10000
+    State.people = 200
+    State.population_growing = 0.01
+    State.distemper = 0
+    State.army = 100
+    State.year = 0
+    State.land = 130
 
 
-# Percent resource changing function.
-def percent_changes(resource, percent):
-    return randint(resource * 1, resource * percent) / 100
+# Building function.
+def building():
+    available_buildings = []
+    for obj in State.buildings.keys():
+        if not State.buildings[obj]:
+            available_buildings.append(obj)
+    available_message = 'Вы можете построить: '
+    for obj in available_buildings:
+        available_message += obj + ', '
+    available_message = available_message[:-2]
+    print(available_message)
+    answer = input('Введите название постройки: ')
+    while answer not in available_buildings:
+        answer = input('Введите корректное название постройки: ')
+    res_changes(answer, '+1')
 
 
-# Small resource change
 def res_changes(*args):
     for i in range(0, len(args), 2):
         res = args[i]
@@ -98,6 +104,37 @@ def res_changes(*args):
             else:
                 State.army -= int(change)
             print(f'Армия: {value}{change}')
+        elif res in State.buildings:
+            if value == '+':
+                State.buildings[res] += int(change)
+            print(f'Вы построили {res}')
+
+
+# Postponing event function.
+def later_event(turn_to_it, func):
+    try:
+        event_list = Game.turns[Game.turn + turn_to_it]
+        Game.turns.update({Game.turn + turn_to_it: event_list.append(func)})
+    except KeyError:
+        event_list = []
+        Game.turns.update({Game.turn + turn_to_it: event_list.append(func)})
+
+
+# Getting answer function.
+def give_answer(text, answers):
+    answer = input(text + answers + '\n')
+    while answer not in ['1', '2']:
+        print(f'Мой король, не могли бы вы повторить {answers}: ')
+        answer = input(text + answers + '\n')
+    return answer
+
+
+# Percent resource changing function.
+def percent_changes(resource, percent):
+    return randint(resource * 1, resource * percent) / 100
+
+
+# Small resource change
 
 
 def village_fire():
@@ -151,7 +188,7 @@ def plague():
     print('На юге нашего царства появилась началась какая-то эпидемия,\
      никто из наших докторов ни разу не встречался с подобным!')
     for i in range(4):
-        later_event(i, plague_after())
+        later_event(i, plague_after)
     res_changes('people', '-50')
 
 
@@ -176,10 +213,10 @@ def columbus():
     answers = '(1 - дать; 2 - отказаться)'
     answer = give_answer(text, answers)
     if answer == '2':
-        choice(later_event(4, new_world()), later_event(4, columbus_lose()))
+        choice(later_event(4, new_world), later_event(4, columbus_lose))
         pass
     else:
-        choice(later_event(4, columbus_win()), later_event(4, columbus_lose()))
+        choice(later_event(4, columbus_win), later_event(4, columbus_lose))
 
 
 def brilliants():
@@ -193,38 +230,38 @@ def forest():
 
 
 def forest_territory():
-    text = 'Сельчане просят ваше разрешение на срубку леса, чтобы построить себе новые дома'
-    answers = '(1 - дать разрешение, 2 - оставить лес)'
+    text = 'Сельчане просят ваше разрешение на срубку леса, чтобы построить себе новые дома '
+    answers = '(1 - дать разрешение, 2 - оставить лес) '
     answer = give_answer(text, answers)
     if answer == '2':
         res_changes('distemper', '+3')
         for i in range(10):
-            later_event(i, forest())
+            later_event(i, forest)
     else:
         res_changes('land', '+20', 'distemper', '-2')
 
 
 def road_trade():
     State.money += 100
-    later_event(1, road_trade())
+    later_event(1, road_trade)
 
 
 def road():
     print('Наши рабочие построили Золотой путь!(+100 к золоту каждый ход)')
     res_changes('money', '+100')
-    later_event(1, road_trade())
+    later_event(1, road_trade)
 
 
 def winter_day():
     State.food -= 100
 
 
-def winter():
+def cruel_winter():
     print('Началась зима')
     print('Мы будем терять 100 единиц зерна каждый ход до её окончания')
     res_changes('food', '-100')
     for i in range(1, randint(2, 5)):
-        later_event(i, winter_day())
+        later_event(i, winter_day)
 
 
 def tournament():
@@ -239,8 +276,8 @@ def expo():
 
 
 def elephants():
-    text = 'Торговец из Кении предлагает вам купить африканских слонов за 200 монет.'
-    answers = '(1 - купить, 2 - и коней хватит)'
+    text = 'Торговец из Кении предлагает вам купить африканских слонов за 200 монет. '
+    answers = '(1 - купить, 2 - и коней хватит) '
     answer = give_answer(text, answers)
     if answer == '1':
         print('Отличные слоны!')
@@ -273,15 +310,30 @@ def india():
         text = 'Купцы хотят отправиться в Индию,\
          но для путешествия им нужно сопровождение,\
           они просят у вас часть армии (50 войнов). '
-        answers = '(1) - отправить войнов. (2) - отказаться от предложения.'
+        answers = '(1) - отправить войнов. (2) - отказаться от предложения. '
         answer = give_answer(text, answers)
         if answer == '1':
             res_changes('army', '-50')
-            later_event(5, indian_success())
+            later_event(5, indian_success)
         else:
             pass
     else:
         pass
+
+
+def fishing():
+    answer = int(input('Рыбалка (1 лодка: -40 золота, +120 еды) (Сколько лодок вы хотите купить): '))
+    res_changes('money', f'-{40 * answer}', 'food', f'+{120 * answer}')
+
+
+def pirates():
+    print('Пираты напали на наши торговые суда!')
+    res_changes('money', f'-{0.3 * State.money}', 'food', f'-{0.2 * State.food}', 'distemper', '+3')
+
+
+def tornado():
+    print('По вашим землям прошлось мощное торнадо, оно уничтожило ')
+
 
 # TODO
 # Events functions. (Sergey)
