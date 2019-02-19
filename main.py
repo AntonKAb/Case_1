@@ -32,6 +32,14 @@ class State:
 
 # TODO
 # Events functions. (Anton)
+def output():
+    print('Деньги: {} | Зерно: {} | Народ: {} | Смута: {} '
+          '| Год: {} | Замля: {} | Еда: {} | Армия: {}'.format(State.money, 
+                                                               State.seed, State.people, State.distemper, 
+                                                               State.year, State.land, State.food, State.army))
+    
+
+
 def seed_own():
     print('Король, сколько зерна песеять?')
     am_to_seat = int(input())
@@ -67,7 +75,7 @@ def seed_own():
         State.people = State.people * 0.85
         State.distemper += 5
         print('Такими темпами в стране начнется голод!')
-        print('Distemper + 5')
+        print('Смута + 5')
     elif ev_r == af_event_4 and (State.seed >= 5000 or State.people < 300):
         pass
 
@@ -122,7 +130,7 @@ def war_exodus():
         print(con_war)
         if con_war == event_af1:
             print('Нашему государству ничего не достанется, Кололь.')
-            print('Distemper + 3')
+            print('Смута + 3')
             State.distemper += 3
         if con_war == event_af2:
             print('В казну поступили обещанные 12 000 золотых. Из 100 солдат выжило только 25.')
@@ -151,17 +159,17 @@ def separatism():
             State.people -= 15
             State.army -= army
             State.distemper += 3
-            print('Land - 30')
-            print('People - 15')
+            print('Замля - 30')
+            print('Народ - 15')
             print('Army - ', army)
-            print('Distemper + 3')
+            print('Смута + 3')
         if army >= 20:
             print(evi_1)
     if answr.upper() == 'НЕТ':
         State.land -= 30
         State.people -= 15
-        print('Land - 30')
-        print('People - 15')
+        print('Замля - 30')
+        print('Народ - 15')
 
 
 def discovery():
@@ -171,8 +179,8 @@ def discovery():
     if answer.upper() == 'ДА' and State.money >= 1000 and State.people >= 10:
         State.money -= 1000
         State.people -= 10
-        print('Money - 1 000')
-        print('People - 10')
+        print('Деньги - 1 000')
+        print('Народ - 10')
     if answer.upper() == 'НЕТ':
         pass
     ev_1_ = 'Король, экспедиционный корпус вернулся с открытиями и ресурсами!'
@@ -185,9 +193,9 @@ def discovery():
         State.people += 10
         if State.distemper >= 10:
             State.distemper -= 10
-            print("Distemper - 10")
-        print('Seed + 420')
-        print('Land + 40')
+            print("Смута - 10")
+        print('Зерно + 420')
+        print('Замля + 40')
     if d_exodus == ev_2_:
         print('Король, экспедиционый корпус не вернулся')
 
@@ -202,10 +210,10 @@ def spy():
         if d_yes == catch:
             print(catch)
             State.distemper -= 3
-            print('Distemper - 3')
-            print('Money - 320')
+            print('Смута - 3')
+            print('Деньги - 320')
         if d_yes == lose:
-            print('Money - 320')
+            print('Деньги - 320')
     if ans.upper() == 'НЕТ':
         lose_1 = 'Слухи оказались правдой. Шпион ограбил казну и убил несколько придворных.'
         bad_l = 'Слухи остаются слухами.'
@@ -214,8 +222,8 @@ def spy():
             print(lose_1)
             State.distemper += 13
             State.money -= 520
-            print('Distemper + 13')
-            print('Money - 520')
+            print('Смута + 13')
+            print('Деньги - 520')
 
 
 def husbrandy():
@@ -224,15 +232,15 @@ def husbrandy():
     if dision <= State.land:
         State.land -= dision
         State.food += dision * 10
-        print('Land -', dision)
-        print('Food + ', dision * 10)
+        print('Замля -', dision)
+        print('Еда + ', dision * 10)
     if dision > State.land:
         while dision > State.land:
             dision = int(input())
         State.land -= dision
         State.food += dision * 10
-        print('Land -', dision)
-        print('Food + ', dision * 10)
+        print('Замля -', dision)
+        print('Еда + ', dision * 10)
 
 
 def wizard():
@@ -269,7 +277,7 @@ def wizard():
                     if predict.upper() != guess.upper():
                         print('Увы, вы ошиблись. Идем дальше?')
                         var = var * 0
-                        dici = input()
+                        dici= input()
                         if dici.upper() == 'НЕТ':
                             perm = False
                             print('До встречи, Король.')
@@ -277,12 +285,12 @@ def wizard():
                             perm = True
                 if var == 2:
                     print('Кажется вы победили, Король. Вот Ваш приз.')
-                    res_changes('money', '+3000', 'food', '+300', 'seed', '+2000', 'distemper', f'-{State.distemper}')
             if ready.upper() == 'НЕТ':
                 print('До встречи, Король.')
 
+
 def fish_sell():
-    print('Король, царь соседнего госудаоства готов купить у нас немного рыбы. (2 золотых за штуку.')
+    print('Король, царь соседнего госудаоства готов купить у нас немного рыбы. (2 ве золотых за штуку.')
     fishsell = int(input('Сколько рыбы прождать?:'))
     if State.food < fishsell:
         while fishsell > State.food:
@@ -290,13 +298,13 @@ def fish_sell():
             fishsell = int(input())
         State.food -= fishsell
         State.money += fishsell * 2
-        print('Food -', fishsell)
-        print('Money +', fishsell * 2)
+        print('Еда -', fishsell)
+        print('Деньги +', fishsell * 2)
     if State.food >= fishsell:
         State.food -= fishsell
         State.money += fishsell * 2
-        print('Food -', fishsell)
-        print('Money +', fishsell * 2)
+        print('Еда -', fishsell)
+        print('Деньги +', fishsell * 2)
 
 # TODO
 # Game restart function.
