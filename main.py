@@ -48,26 +48,28 @@ def acknowledgement():
 
 def moulin_rouge():
     print('Увеселительное кабарэ для молодых и взрослых бизнес-информатиков и бизнес-информатичек, где можно отдохнуть и телом и душой!')
-    res_changes('people', f'-{percent_changes(State.people, 3)}'
-                'distemper', f'-{percent_changes(State.distemper, -20)}'
-                'money', f'-{State.money, -500}')
+    res_changes('people', f'+{percent_changes(State.people, 3)}'
+                'distemper', f'-{percent_changes(State.distemper, 30)}'
+                'money', f'-{State.money, 500}')
 def church():
     print('Церковь построена, милорд!')
-    res_changes('distemper', f'-{percent_changes(State.distemper, -30)}'
-                'money', f'-{percent_changes(State.money, -250)}')
+    res_changes('distemper', f'-{percent_changes(State.distemper, 50)}'
+                'money', f'-{State.money, -2000}')
 
 def accounting_chamber():
     print('Теперь у вас есть счетная палата.')
-    res_changes('money', f'-{percent_changes(State.money, 35)}')
+    res_changes('money', f'+{percent_changes(State.money, 35)}')
 
 def windmill():
     print('Мельница готова, король!')
-    res_changes('seed', f'-{percent_changes(State.seed, 20)}')
-    res_changes('money', f'-{percent_changes(State.money -50)}')
+    res_changes('seed', f'+{percent_changes(State.seed, 20)}')
+    res_changes('money', f'-{percent_changes(State.money, 50)}')
+    
 def barracks():
-    print('')
+    print('Казармы готовы, Ваше Величество')
+    res_changes('money', f'-{State.money, 600}')
+    res_changes('army', f'+{percent_changes(State.army, 35)}')
 
-def
 
 # TODO
 #Technologies functions.
@@ -91,6 +93,7 @@ def hunting():
     State.money -= 400
 def warfare():
     print('Вы постигли новых высот в военном деле, поздравляю мой государь!')
+    State.buildings.update({'Казармы': 0})
     State.tech_effects.update({'army': 1.33})
     State.money -= 400
 def religion():
@@ -99,7 +102,7 @@ def religion():
     State.money -= 400
 def masonry():
     print('Вы изучили каменную кладку. Вам доступны новые постройки и ресурсы.')
-    State.buildings.update({'The Great Wall'})
+    State.buildings.update({'The Great Wall': 0})
     State.money -= 400
 def rivalry():
     print('Честь, отвага и благородие отныне не чужды бизнес информатикам. Ожидайте турниры в вашу честь!')
@@ -147,6 +150,8 @@ if State.technologies.get('sailing') == 1:
     fishing()
     fish_sell()
 
+if State.technologies.get('cattle_breeding'):
+    husbrandy()
 
 #Hunting process.
 if State.technologies.get('hunting') == 1:
