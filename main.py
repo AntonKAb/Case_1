@@ -3,15 +3,17 @@ CASE_1
 Developers: Anufrienko K., Kabaev A., Lankevich S.
 """
 
-# TODO
-# Government object.
-class state:
+class State:
     money = 1000
-    seed = 10000
+    food = 10000
     people = 200
+    population_growing = 0.01
     distemper = 0
+    army = 100
     year = 0
     land = 130
+    buildings = {'windmill': 0, 'accounting_chamber': 0, 'moulin_rouge': 0}
+    tech_effects = {'food': 1, 'money': 1, 'people': 1, 'distemper': 1, 'army': 1, 'land': 1}
 
 def acknowledgement():
     available_technologies = []
@@ -45,6 +47,8 @@ def acknowledgement():
 
 # TODO
 # Building functions.
+
+
 
 def moulin_rouge():
     print('Увеселительное кабарэ для молодых и взрослых бизнес-информатиков и бизнес-информатичек, где можно отдохнуть и телом и душой!')
@@ -115,7 +119,7 @@ def rivalry():
 def random_events():
     negative_events = [village_fire(), city_fire(), flood(), conspiracy(), strike(), plague(), separatism(), war(), spy(),
                        cruel_winter(), pirates(), tornado()]
-    positive_events = [discovery(), road(), hero(), wonders_of_nature(), forest_territory()]
+    positive_events = [discovery(), road(), hero(), wonders_of_nature(), forest_territory(), city_state()]
     if State.technologies.get('masonry') == 1:
         positive_events.append(brilliants)
     if State.technologies.get('rivalry') == 1:
