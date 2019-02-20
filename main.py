@@ -444,7 +444,7 @@ def wizard():
                     if predict.upper() != guess.upper():
                         print('Увы, вы ошиблись. Идем дальше?')
                         var = var * 0
-                        dici= input()
+                        dici = input()
                         if dici.upper() == 'НЕТ':
                             perm = False
                             print('До встречи, Король.')
@@ -818,8 +818,7 @@ def city_state():
     res_changes('land', '+20', 'people', '+10')
 
 
-life = True
-while life is True:
+while Game.life:
     output()
     seed_own()
     seed_sell()
@@ -839,7 +838,7 @@ while life is True:
         hunt()
     State.year += 1
     if State.food / State.people <= 15 or State.people > State.land * 1.4 or State.distemper >= 75:
-        life = False
+        Game.life = False
         output()
         print(
             'Ваше правление нельзя навзвать успешным. '
@@ -849,5 +848,3 @@ while life is True:
             restart()
         else:
             exit()
-
-
