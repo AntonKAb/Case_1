@@ -579,7 +579,7 @@ def give_answer(text, answers):
 
 # Percent resource changing function.
 def percent_changes(resource, percent):
-    return randint(min(resource, resource * percent), max(resource, resource * percent)) / 100
+    return randint(resource * 1, resource * percent) / 100
 
 
 def village_fire():
