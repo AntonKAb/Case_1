@@ -205,7 +205,7 @@ def output():
 
 
 def seed_own():
-    print('Король, сколько зерна песеять?')
+    print('Король, сколько зерна посеять?')
     am_to_seat = int(input())
     State.food -= am_to_seat
     print('Король, сколько зерна раздать людям?')
